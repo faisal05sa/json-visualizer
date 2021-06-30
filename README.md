@@ -6,17 +6,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 In the project directory, you can run:
 
-### `npm ci`
-
-It will sync the project (will install the packages mentioned in packages.json)
-
-- The project must have an existing package-lock.json or npm-shrinkwrap.json
-- If dependencies in the package lock do not match those in package.json, npm ci will exit with an error, instead of updating the package lock.
-
-### `npm install`
-
-It will install latest versions of packages from packages.json and will rewrite the package lock (which is often not the desired behaviour).
-
 ### `npm start`
 
 Runs the app in the development mode.\
