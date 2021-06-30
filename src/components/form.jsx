@@ -1,62 +1,81 @@
 import React, { Component } from "react";
+import { VscWarning } from "react-icons/vsc";
+import Editor from "@monaco-editor/react";
+
+import Switch from "./switch";
+import {
+  Alert,
+  Button,
+  Row,
+  Col,
+  Card,
+  InputGroup,
+  Form,
+  FormControl,
+  Spinner,
+  Table,
+} from "react-bootstrap";
+
 class FormComponent extends Component {
   state = {
-    settings: {
-      use_mono: false,
-      truncate: false,
-    },
-    jsonInputRef: null,
-    json: null,
     jsonError: "",
+    errorMarkers: [],
     isJsonValid: true,
   };
 
-  constructor() {
-    super();
-    this.state.jsonInputRef = React.createRef();
+  jsonInputRef = null;
+
+  constructor(props) {
+    super(props);
+    this.jsonInputRef = React.createRef();
+    this.editorRef = React.createRef();
+    if (props.state.settings.darkMode) {
+      document.body.classList.add("bg-dark");
+    }
   }
 
-  handleJsonInputChanged = (event) => {
-    let new_state = { ...this.state };
-    const new_json_str = event.target.value;
+  handleEditorDidMount = (editor, monaco) => {
+    this.editorRef.current = editor;
+  };
 
+  toggleSettings = (event) => {
+    const target = event.target;
+    let new_state = { ...this.props.state };
+    new_state.settings[target.name] = target.checked;
+    this.props.setState(new_state);
+    if (target.name === "darkMode") {
+      document.body.classList.toggle("bg-dark");
+      document.body.classList.toggle("text-white");
+    }
+  };
+
+  handleEditorValidation = (markers) => {
+    this.setState({ errorMarkers: markers });
+  };
+
+  handleJsonInputChanged = (json_str, event) => {
+    let new_state = { ...this.props.state };
     // if input is empty, ignore
-    if (!new_json_str) {
-      new_state.json = null;
+    if (!json_str) {
+      new_state.json = undefined;
       new_state.isJsonValid = true;
-      new_state.jsonError = <React.Fragment />;
-      this.setState(new_state);
-
-      // raise the event to render json into html
-      this.props.onInputChange(new_state);
+      new_state.jsonError = null;
+      this.props.setState(new_state);
       return;
     }
 
     try {
       // check if input is a valid json
-      const json_obj = JSON.parse(new_json_str);
+      const json_obj = JSON.parse(json_str);
       new_state.json = json_obj;
-      new_state.isJsonValid = true;
-      new_state.jsonError = <React.Fragment />;
-      this.setState(new_state);
-
-      // raise the event to render json into html
-      this.props.onInputChange(new_state);
+      new_state.isJsonValiderrorMarkers = true;
+      new_state.jsonError = null;
+      this.props.setState(new_state);
     } catch (err) {
-      // Json is not valid
-      new_state.json = null;
+      new_state.json = undefined;
       new_state.isJsonValid = false;
-      new_state.jsonError = (
-        <div className="alert alert-danger">
-          <strong>{err.name}:</strong> {err.message}
-        </div>
-      );
-
-      let errPos = this.getErrorPosition(err.message, new_json_str.length);
-      let current = this.state.jsonInputRef.current;
-      this.setState(new_state, () => {
-        current.selectionStart = current.selectionEnd = errPos;
-      });
+      new_state.jsonError = err;
+      this.props.setState(new_state);
     }
   };
 
@@ -70,85 +89,187 @@ class FormComponent extends Component {
     return defaultPos;
   };
 
-  // handleInputChange = () => {
-  //   this.props.onInputChange(this.state);
-  // };
+  goToErrorPosition = (event, errPos) => {
+    // let current = this.editorRef.current;
+    // console.log(event);
+    // this.props.setState(this.props.state, () => {
+    //   current.focus();
+    //   current.selectionStart = current.selectionEnd = errPos;
+    // });
+  };
 
   render() {
-    let textAreaClasses = "form-control";
-    if (!this.state.isJsonValid) {
-      textAreaClasses += " is-invalid";
-    }
+    // let textAreaClasses = "form-control";
+    // if (!this.props.state.isJsonValid) {
+    //   textAreaClasses += " is-invalid";
+    // }
+    const is_dark_mode = this.props.state.settings.darkMode;
 
     return (
-      <div className="row">
-        <div className="col-10 p-3">
-          <div className="form-floating">
-            <textarea
+      <>
+        <Row className="mt-3">
+          <Col xs={9} style={{ textAlign: "left" }}>
+            Please enter your JSON here:
+            <Editor
+              // ref={ref}
+              language="json"
+              defaultLanguage="json"
+              height="220px"
+              onChange={this.handleJsonInputChanged}
+              onMount={this.handleEditorDidMount}
+              onValidate={this.handleEditorValidation}
+              theme={is_dark_mode ? "vs-dark" : "light"}
+              loading={<Spinner variant="primary" animation="border" />}
+              options={{
+                wordWrap: "on",
+                minimap: { enabled: false },
+                //lineNumbers: "off",
+              }}
+            />
+            {/* <FormControl
+              isValid={this.props.state.isJsonValid && this.props.state.json}
+              isInvalid={!this.props.state.isJsonValid}
+              as="textarea"
+              aria-label="With textarea"
               id="jsonTextarea"
               className={textAreaClasses}
-              defaultValue={this.state.json}
+              defaultValue={this.props.state.json_str}
               required
-              style={{ height: 200 }}
+              style={{ height: "160px" }}
               onChange={this.handleJsonInputChanged}
-              ref={this.state.jsonInputRef}
-            />
-            <label htmlFor="jsonTextarea">Please enter your JSON here</label>
-          </div>
-        </div>
-        <div className="col-2 p-3">
-          <div className="card h-100">
-            <div className="card-body">
-              <h5 className="card-title">Settings</h5>
-              <ul className="nav flex-column">
-                <li className="nav-item">
-                  <div className="text-dark form-check form-switch">
-                    <input
-                      className="form-check-input"
-                      id="flexSwitchTruncate"
-                      name="truncate_text"
-                      type="checkbox"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexSwitchTruncate"
-                    >
-                      Truncate Long Strings
-                    </label>
-                  </div>
-                </li>
-                <li className="nav-item">
-                  <div className="text-dark form-check form-switch">
-                    <input
-                      className="form-check-input"
-                      id="flexSwitchMonoFont"
-                      name="use_mono_font"
-                      type="checkbox"
-                    />
-                    <label
-                      className="form-check-label"
-                      htmlFor="flexSwitchMonoFont"
-                    >
-                      Use Mono Font
-                    </label>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <div className="col-12">{this.state.jsonError}</div>
-        {/* <div className="col-1">
-          <button
-            className="btn btn-success float-end mt-2"
-            // onClick={this.handleInputChange}
+              ref={this.jsonInputRef}
+              placeholder="Enter you JSON here"
+            /> */}
+          </Col>
+          <Col
+            xs={3}
+            style={{
+              float: "none",
+              display: "table-cell",
+              verticalAlign: "top",
+            }}
           >
-            Visualize
-          </button>
-        </div> */}
-      </div>
+            <Card
+              bg={is_dark_mode ? "secondary" : "light"}
+              text={is_dark_mode ? "white" : "dark"}
+              style={{ width: "18rem" }}
+              className="mb-2"
+            >
+              <Card.Header
+                style={{
+                  width: "80%",
+                  marginToo: 30,
+                  marginLeft: "10%",
+                  borderRadius: "0.5rem",
+                }}
+              >
+                Settings
+              </Card.Header>
+              <Card.Body>
+                <Card.Title></Card.Title>
+                {this.props.toggleControls.map((control) => (
+                  <Switch
+                    key={control.name}
+                    name={control.name}
+                    text={control.text}
+                    checked={this.props.state.settings[control.name]}
+                    onChange={this.toggleSettings}
+                  />
+                ))}
+                <Card.Text></Card.Text>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+        <Row>
+          <InputGroup hasValidation>
+            {/* a hidden control */}
+            <FormControl isInvalid style={{ display: "none" }} />
+            <Form.Control.Feedback type="invalid">
+              {this.renderError()}
+            </Form.Control.Feedback>
+          </InputGroup>
+        </Row>
+      </>
     );
   }
+
+  renderError = () => {
+    // check if json is valid
+    if (this.props.state.isJsonValid) return <React.Fragment />;
+
+    let err = this.props.state.jsonError;
+    if (!err) return <React.Fragment />;
+
+    return (
+      <Alert variant="danger" className="mt-2">
+        <Alert.Heading>
+          <VscWarning className="mr-2" size={25} />
+          Ahhh! You got some error(s)!
+        </Alert.Heading>
+        {this.state.errorMarkers && (
+          <>
+            <Table responsive variant="danger" size="sm">
+              <thead style={{ verticalAlign: "center" }}>
+                <tr>
+                  <th rowSpan={2}>Message</th>
+                  <th colSpan={2}>Error Position</th>
+                </tr>
+                <tr>
+                  <th>From</th>
+                  <th>To</th>
+                </tr>
+              </thead>
+              <tbody>
+                {this.state.errorMarkers.map((marker, index) => {
+                  return (
+                    <tr key={index}>
+                      <th>{marker.message}</th>
+                      <td>
+                        {marker.startLineNumber}:{marker.startColumn}
+                      </td>
+                      <td>
+                        {marker.endLineNumber}:{marker.endColumn}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </Table>
+          </>
+        )}
+      </Alert>
+    );
+
+    const inputRef = this.jsonInputRef.current;
+
+    let json_str = inputRef ? inputRef.value : "";
+    let errPos = this.getErrorPosition(err.message, json_str.length);
+
+    return (
+      <Alert variant="danger" className="mt-2">
+        <Row>
+          <Col>
+            <Alert.Heading>
+              <VscWarning className="mr-2" size={25} />
+              {err.name}!
+            </Alert.Heading>
+            {err.message}.
+          </Col>
+          <Col xs={"auto"}>
+            <div className="d-flex justify-content-end">
+              <Button
+                variant="outline-danger"
+                onClick={(event) => this.goToErrorPosition(event, errPos)}
+              >
+                Locate Error
+              </Button>
+            </div>
+          </Col>
+        </Row>
+      </Alert>
+    );
+  };
 }
 
 export default FormComponent;
