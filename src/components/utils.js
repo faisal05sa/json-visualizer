@@ -252,10 +252,11 @@ export function filterObj(obj, filterText) {
     if (flag === true) {
       filtered_obj[key] = value;
     } else if (flag === "unsure") {
-      value = filterObj(value, filterText);
-      if (Object.keys(value).length > 0) {
-        filtered_obj[key] = value;
-      }
+      filtered_obj[key] = value;
+      // value = filterObj(value, filterText);
+      // if (Object.keys(value).length > 0) {
+      //   filtered_obj[key] = value;
+      // }
     }
   });
   return filtered_obj;
