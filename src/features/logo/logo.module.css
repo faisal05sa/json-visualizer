@@ -1,0 +1,41 @@
+.logoFont {
+  font-size: xxx-large;
+  margin-right: 10px;
+}
+
+.logoFont .openingCurly {
+  background-image: linear-gradient(
+    -28deg,
+    #fbbc05 0%,
+    #fbbc05 30%,
+    #ea4335 30%,
+    #ea4335 70%
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logoFont .semiColon {
+  color: #34a853;
+  background-image: linear-gradient(
+    -28deg,
+    #fbbc05 0%,
+    #fbbc05 45%,
+    #34a853 45%,
+    #34a853 45%
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.logoFont .closingCurly {
+  background-image: linear-gradient(
+    -28deg,
+    #4285f4 0%,
+    #4285f4 50%,
+    #34a853 50%,
+    #34a853 50%
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
