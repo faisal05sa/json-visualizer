@@ -13,6 +13,7 @@ function ToolTipButton(props) {
         onClick={props.onClick}
         onMouseDown={props.onMouseDown}
         onMouseUp={props.onMouseUp}
+        style={props.style}
       >
         {props.children}
       </Button>

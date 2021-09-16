@@ -17,17 +17,17 @@ import {
 
 // Create a Custom Hook on top of useEffect
 export function useCtrlF(onSearchF) {
-  function handleKeyDown(e) {
-    // Check if CTRL+F, Command+F on mac
-    if (e.keyCode === 114 || ((e.ctrlKey || e.metaKey) && e.keyCode === 70)) {
-      e.preventDefault();
-      onSearchF();
-    }
-  }
   useEffect(() => {
+    function handleKeyDown(e) {
+      // Check if CTRL+F, Command+F on mac
+      if (e.keyCode === 114 || ((e.ctrlKey || e.metaKey) && e.keyCode === 70)) {
+        e.preventDefault();
+        onSearchF();
+      }
+    }
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [handleKeyDown]);
+  }, [onSearchF]);
 }
 
 function StatusBar(props) {

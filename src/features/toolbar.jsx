@@ -59,7 +59,15 @@ class Toolbar extends Component {
     return (
       <ButtonToolbar aria-label="Toolbar with Button groups">
         <ButtonGroup className="me-2" aria-label="First group">
-          <Button variant="primary" disabled>
+          <Button
+            variant="primary"
+            disabled
+            style={
+              expanded
+                ? { borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }
+                : {}
+            }
+          >
             <Badge variant="light">{this.getDataDescription()}</Badge>
           </Button>
 
@@ -93,6 +101,7 @@ class Toolbar extends Component {
                 variant="danger"
                 tooltip="Delete from DOM"
                 onClick={this.toggleDelete}
+                style={expanded ? { borderBottomRightRadius: 0 } : {}}
               >
                 <MdDelete />
               </ToolTipButton>
