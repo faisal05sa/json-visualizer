@@ -30,8 +30,6 @@ export function useCtrlF(onSearchF) {
   }, [handleKeyDown]);
 }
 
-console.log("Redering Statur bar");
-
 function StatusBar(props) {
   let timeout = 0;
   const JsonPathRef = React.createRef();
