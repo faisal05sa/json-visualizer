@@ -3,15 +3,14 @@ import { FaUndo } from "react-icons/fa";
 import { MdContentCopy, MdDelete } from "react-icons/md";
 import { BiCollapse, BiExpand } from "react-icons/bi";
 import ToolTipButton from "./tooltip_button";
-import { notification } from "../app/utils";
+import { copyTextToClipboard } from "../app/utils";
 
 import { Badge, Button, ButtonGroup, ButtonToolbar } from "react-bootstrap";
 
 class Toolbar extends Component {
   copyToClipBoard = () => {
     const text = JSON.stringify(this.props.data);
-    navigator.clipboard.writeText(text);
-    notification.success("JSON copied to the clipboard.");
+    copyTextToClipboard(text);
   };
 
   toggleExpand = () => {

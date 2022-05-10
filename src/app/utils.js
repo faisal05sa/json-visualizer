@@ -15,8 +15,7 @@ export const notification = {
   error: (msg) => toast.error(msg, toast_notification_options),
 };
 
-export function copyPathToClipboard(text) {
-  //const text = JsonPathRef.current.value;
+export function copyTextToClipboard(text) {
   if (text) {
     navigator.clipboard.writeText(text);
     notification.success("Copied to the Clipboard.");

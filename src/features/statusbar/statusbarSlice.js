@@ -16,16 +16,6 @@ export const statusbarSlice = createSlice({
     // which detects changes to a "draft state" and produces a brand new
     // immutable state based off those changes
 
-    // increment: (state) => {
-    //   state.value += 1
-    // },
-    // decrement: (state) => {
-    //   state.value -= 1
-    // },
-    // incrementByAmount: (state, action) => {
-    //   state.value += action.payload
-    // },
-
     removeSearchText: (state) => {
       state.searchText = "";
     },

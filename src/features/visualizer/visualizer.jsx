@@ -3,6 +3,7 @@ import Toolbar from "../toolbar";
 import { Spinner } from "react-bootstrap";
 import memoize from "memoize-one";
 import { useSelector, useDispatch } from "react-redux";
+import "./visualizer.module.css";
 
 import makeTable, {
   join_path,

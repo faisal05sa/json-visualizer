@@ -10,8 +10,11 @@ import {
   removeJsonInput,
 } from "./formSlice";
 
+import { updateJsonPath } from "../statusbar/statusbarSlice";
+
 import InputNumber from "../counter/script";
-import { copyPathToClipboard } from "../../app/utils";
+import { removeSearchText } from "../statusbar/statusbarSlice";
+import { copyTextToClipboard } from "../../app/utils";
 
 import Switch from "./switch";
 import {
@@ -73,6 +76,9 @@ function FormComponent(props) {
         errorMarkers: [],
       });
       dispatch(removeJsonInput());
+      dispatch(removeSearchText());
+      dispatch(removeSearchText());
+      dispatch(updateJsonPath("root"));
       return;
     }
 
@@ -173,7 +179,7 @@ function FormComponent(props) {
           <Card
             bg={is_dark_mode ? "secondary" : "light"}
             text={is_dark_mode ? "white" : "dark"}
-            style={{ width: "18rem" }}
+            style={{ width: "18rem", transition: "height 2s linear" }}
             className="mb-2"
           >
             <Card.Header
@@ -215,7 +221,7 @@ function FormComponent(props) {
                 onClick={() => {
                   const sampleJson =
                     '{"brand": "Harbor Bay", "retailer_sku": "90406", "retailer": "dxl-uk", "currency": "USD", "price": 8136.54, "lang": "en", "market": "UK", "gender": "men", "industry": null, "care": ["60% cotton/40% polyester", "Button-down collar", "Chest pocket", "Faux-horn buttons", "Center back pleat", "Short sleeves", "Straight hem with side vents", " Machine wash; imported", ""], "name": "Harbor Bay Easy-Care Solid Sport Shirt", "url": "https://www.dxl.com/casual-shirts/harbor-bay-easy-care-solid-sport-shirt/cat140076/90406", "uuid": null, "skus": {"cl19083_XL": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "XL"}, "cl19083_XLT": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "XLT"}, "cl19083_1XL": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "1XL"}, "cl19083_1XLT": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "1XLT"}, "cl19083_2XL": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "2XL"}, "cl19083_2XLT": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "2XLT"}, "cl19083_3XL": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "3XL"}, "cl19083_3XLT": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "3XLT"}, "cl19083_4XL": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "4XL"}, "cl19083_4XLT": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "4XLT"}, "cl19083_5XL": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "5XL"}, "cl19083_5XLT": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "5XLT"}, "cl19083_6XL": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "6XL"}, "cl19083_6XLT": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "6XLT"}, "cl19083_7XL": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "7XL"}, "cl19083_7XLT": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "7XLT"}, "cl19083_8XL": {"currency": "USD", "colour": "plum heather", "price": "8,136.54", "size": "8XL"}}, "image_urls": {"plum heather_cl19083": ["https://images.dxl.com/is/image/CasualMale/p90406plum_heather"]}}';
-                  copyPathToClipboard(sampleJson);
+                  copyTextToClipboard(sampleJson);
                 }}
               >
                 Get Sample JSON

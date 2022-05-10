@@ -4,7 +4,7 @@ import { VscExpandAll, VscCollapseAll } from "react-icons/vsc";
 import { ImSearch } from "react-icons/im";
 import { Row, Col, InputGroup, FormControl } from "react-bootstrap";
 import ToolTipButton from "../tooltip_button";
-import { copyPathToClipboard } from "../../app/utils";
+import { copyTextToClipboard } from "../../app/utils";
 
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -16,7 +16,7 @@ import {
 } from "./statusbarSlice";
 
 // Create a Custom Hook on top of useEffect
-export function useCtrlF(onSearchF) {
+export function useCtrlF(onSearchF, dependencies) {
   useEffect(() => {
     function handleKeyDown(e) {
       // Check if CTRL+F, Command+F on mac
@@ -38,6 +38,11 @@ function StatusBar(props) {
   useCtrlF(() => {
     searchBoxRef.current.focus();
   });
+
+  function handleCopyPathToClipboard() {
+    const text = JsonPathRef.current.value;
+    copyTextToClipboard(text);
+  }
 
   const dispatch = useDispatch();
   const { searchText, jsonPath } = useSelector((state) => state.statusbar);
@@ -107,7 +112,7 @@ function StatusBar(props) {
             variant={"success"}
             tooltip={"Copy this path"}
             TooltipPlacement="bottom"
-            onClick={copyPathToClipboard}
+            onClick={handleCopyPathToClipboard}
           >
             <MdContentCopy />
           </ToolTipButton>
