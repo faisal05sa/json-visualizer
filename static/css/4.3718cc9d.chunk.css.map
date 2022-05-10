@@ -1,0 +1,1 @@
+{"version":3,"sources":["webpack://src/features/visualizer/visualizer.module.css"],"names":[],"mappings":"AAAA,4BACE,kBAAmB,CACnB,QAAS,CACT,cAAe,CACf,eACF","file":"4.3718cc9d.chunk.css","sourcesContent":[".table th {\n  white-space: nowrap;\n  width: 1%;\n  padding-left: 5;\n  padding-right: 5;\n}\n"]}
